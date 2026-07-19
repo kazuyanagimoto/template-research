@@ -43,14 +43,18 @@ fct_flipper_fit <- function(data) {
     mutate(
       pred = mapply(
         \(m, d) {
-          grid <- data.frame(flipper_len = seq(
-            min(d$flipper_len), max(d$flipper_len),
-            length.out = 50
-          ))
+          grid <- data.frame(
+            flipper_len = seq(
+              min(d$flipper_len),
+              max(d$flipper_len),
+              length.out = 50
+            )
+          )
           grid$body_mass <- predict(m, newdata = grid)
           grid
         },
-        fit, data,
+        fit,
+        data,
         SIMPLIFY = FALSE
       )
     ) |>

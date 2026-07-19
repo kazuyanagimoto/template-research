@@ -110,7 +110,11 @@ pal_species <- c(
   "Chinstrap" = color_accent2,
   "Gentoo" = color_accent3
 )
-lty_species <- c("Adelie" = "solid", "Chinstrap" = "dashed", "Gentoo" = "dotted")
+lty_species <- c(
+  "Adelie" = "solid",
+  "Chinstrap" = "dashed",
+  "Gentoo" = "dotted"
+)
 shp_species <- c("Adelie" = 16, "Chinstrap" = 17, "Gentoo" = 15)
 
 scale_species <- function(...) {
@@ -128,7 +132,11 @@ scale_species <- function(...) {
 theme_mitex <- function(x, ...) {
   fn <- function(table) {
     if (isTRUE(table@output == "typst")) {
-      table@table_string <- gsub("\\$(.*?)\\$", "#mi(`\\1`)", table@table_string)
+      table@table_string <- gsub(
+        "\\$(.*?)\\$",
+        "#mi(`\\1`)",
+        table@table_string
+      )
       table@table_string <- paste0(
         "#align(center)[\n",
         table@table_string,
@@ -151,6 +159,10 @@ notes_text <- function(text) {
   } else if (isTRUE(knitr::pandoc_to() == "typst")) {
     paste0("#set par(leading: 0.56em, spacing: 0em); #emph[Notes:] ", text)
   } else {
-    paste0("<span style=\"line-height: 1.2;\"><em>Notes:</em> ", text, "</span>")
+    paste0(
+      "<span style=\"line-height: 1.2;\"><em>Notes:</em> ",
+      text,
+      "</span>"
+    )
   }
 }
