@@ -61,8 +61,11 @@ An opinionated template for empirical research projects built on:
    ```sh
    rig add 4.6        # R version pinned in rproject.toml
    brew install rv    # A2-ai/homebrew-tap/rv
+   brew install air   # posit-dev/homebrew-air (R formatter; optional)
    ```
 
+   R code is formatted with [air](https://posit-dev.github.io/air/) (`air format .`, config in `air.toml`).
+   Installing the Air extension for VS Code / Positron formats R and R chunks in `.qmd` on save using the same config, with no CLI needed.
 4. Restore the R environment and run the pipeline:
 
    ```sh

@@ -28,5 +28,22 @@
 ## Writing and style
 
 - `references.bib` is Zotero-managed; never hand-edit it.
-- Quarto + R style follows the machine-wide `quarto-r` skill: English plot text, `tinytable` (no `kable`), hash-pipe chunk headers, one sentence per line in prose, no em-dashes.
 - Code comments and docstrings are in English.
+- No em-dashes anywhere (prose, captions, comments, strings). Use commas, parentheses, or rewrite.
+- Reserve "significant"/"significantly" for statistical significance only; otherwise use "substantial", "large", "marked", etc.
+
+### R code
+
+- Format R with [air](https://posit-dev.github.io/air/) (`air format .`); settings are in `air.toml`. The `rv/` scripts are excluded because rv generates them. The air VS Code/Positron extension formats R chunks inside `.qmd` on save using the same `air.toml`.
+- Aggregate with `summarize(.by = ...)` (and `mutate/filter(.by = ...)`), not a separate `group_by()`.
+- Estimate regressions with `fixest` (`feols`/`feglm`/`fepois`), not `lm`/`glm`; set `vcov` explicitly (`"hetero"` or `~cluster`).
+
+### Quarto (notes, slides, manuscript)
+
+- All figure text is English: `labs()`, `scale_*(name = ...)`, axis/legend/facet labels, and `#| fig-cap`. Table captions (`#| tbl-cap`, `tt(caption = ...)`) match the surrounding prose language.
+- Never hard-code empirical numbers in prose, captions, or `annotate()`. Compute them in R and interpolate with inline `` `r ...` `` / `sprintf()`.
+- Tables use `tinytable` (`tt()`, or `modelsummary(..., output = "tinytable")`), never `knitr::kable()`. In-cell math is LaTeX (`$\sigma$`); set `options(tinytable_html_mathjax = TRUE)` for HTML.
+- R chunk options use the hash-pipe form (`#| label:`), not inline `{r, opt=val}`. Use cross-ref prefixes (`fig-*`, `tbl-*`, `sec-*`); slides use `plot-*` / `table-*` to suppress auto-captions.
+- In `geom_point`, map the color variable to `shape` too (and `linetype` for lines) so figures survive grayscale and color-blindness; keep one merged legend by giving the scales the same `name`. Prefer the legend inside an empty panel corner.
+- Prose uses one sentence per line (semantic line breaks); do not hard-wrap a sentence.
+- On slides, use bold sparingly: at most one punchline per slide, or as a structural label; not for terminology or numbers.
