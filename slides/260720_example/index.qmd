@@ -16,7 +16,9 @@ format:
 #| label: setup
 #| include: false
 # Self-contained: source this deck's frozen setup, never tar_load() the pipeline.
-source(here::here("slides", "260720_example", "code", "setup.R"))
+# The slides project runs each deck with its own folder as the working
+# directory (execute-dir: file), so paths here are relative to this folder.
+source("code/setup.R")
 theme_set(theme_slide())
 ```
 
@@ -31,7 +33,12 @@ theme_set(theme_slide())
 ```{r}
 #| label: plot-flipper
 penguins_snapshot |>
-  ggplot(aes(x = flipper_len, y = body_mass, color = species, shape = species)) +
+  ggplot(aes(
+    x = flipper_len,
+    y = body_mass,
+    color = species,
+    shape = species
+  )) +
   geom_point(alpha = 0.6) +
   scale_species(name = NULL) +
   labs(x = "Flipper length (mm)", y = "Body mass (g)") +

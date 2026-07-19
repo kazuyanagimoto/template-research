@@ -21,7 +21,9 @@ An opinionated template for empirical research projects built on:
 ├── notes/              # Trial-and-error notes (Quarto website, local viewing)
 │   ├── data/           # Shared home of note-stage datasets (gitignored)
 │   └── 01-example/     # One folder per note: index.qmd, code/, output/, data -> ../data
-├── slides/             # One folder per deck (like notes); frozen snapshots
+├── slides/             # Own Quarto project; one folder per deck, frozen snapshots
+│   ├── _quarto.yml     # Slides project config (shared across decks)
+│   ├── _extensions/    # Touying/Typst theme, shared by all decks
 │   ├── data/           # Shared home of slide-stage datasets (gitignored)
 │   └── 260720_example/ # index.qmd, code/, output/, data -> ../data
 ├── manuscript/         # Quarto book + single-file Typst manuscript
@@ -41,7 +43,7 @@ An opinionated template for empirical research projects built on:
    When a note produces a solid result, promote the code into `R/tar_*.R`; the note stays behind as the record.
 3. **The manuscript consumes targets; slides are frozen snapshots.**
    The manuscript reads the live pipeline with `tar_load`, so it always reflects the current data.
-   A deck under `slides/` is a folder like a note and never uses `tar_load`: it carries the theme, data, and results it needs (in `code/`, `output/`, or via the `data -> ../data` symlink), so a talk given a year ago still compiles as it did then.
+   `slides/` is its own Quarto project (like `manuscript/`), and each deck is a folder like a note that never uses `tar_load`: it carries the theme, data, and results it needs (in `code/`, `output/`, or via the `data -> ../data` symlink), so a talk given a year ago still compiles as it did then.
    Every number in prose is computed inline (`` `r ...` ``), never typed as a literal.
 
 ## Getting started

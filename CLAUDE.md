@@ -21,7 +21,8 @@
 ## Manuscript and slides
 
 - `manuscript/` is its own Quarto book project; `manuscript.qmd` is the single-file Typst build (econ-manuscript extension). Chapters pin paths with `here::i_am("manuscript/_quarto.yml")` and read inputs exclusively with `tar_load()`/`tar_read()`. The manuscript tracks the live pipeline.
-- `slides/` holds one folder per deck (`slides/YYMMDD_venue/{index.qmd, code/, output/, data}`, Touying + clean Typst theme), structured like notes. A deck is a **frozen snapshot**: it never uses `tar_load`/`tar_read`. Copy the theme, data, and results it needs into the folder (`code/`, `output/`, or the `data -> ../data` symlink to `slides/data/`) so it compiles identically regardless of how the pipeline later evolves.
+- `slides/` is its own Quarto project (`slides/_quarto.yml`, `type: default`, `execute-dir: file`), parallel to `manuscript/`, so the shared `slides/_extensions` (Touying/Typst) and `slides/_quarto.yml` config apply to every deck. The repo-root website project excludes it via `.quartoignore`. Render a deck with `quarto render slides/YYMMDD_venue/index.qmd`, or the whole project with `quarto render slides`.
+- Each deck is a folder `slides/YYMMDD_venue/{index.qmd, code/, output/, data}`, structured like a note. A deck is a **frozen snapshot**: it never uses `tar_load`/`tar_read`. It carries the theme, data, and results it needs (`code/`, `output/`, or the `data -> ../data` symlink to `slides/data/`) so it compiles identically regardless of how the pipeline later evolves. With `execute-dir: file`, use paths relative to the deck folder (`source("code/setup.R")`, `read_csv("data/...")`).
 - No hard-coded empirical numbers in prose, captions, or annotations; compute them in R and interpolate.
 
 ## Writing and style

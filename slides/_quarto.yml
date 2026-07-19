@@ -1,0 +1,36 @@
+project:
+  type: default
+  # Run each deck with its own folder as the working directory, so a deck
+  # refers to its files with simple relative paths (code/setup.R, data/...,
+  # output/...) and stays a self-contained unit.
+  execute-dir: file
+
+# slides/ is its own Quarto project (parallel to manuscript/). This makes
+# slides/ the project root, so slides/_extensions and this shared config apply
+# to every deck subfolder (slides/YYMMDD_venue/) without per-deck copies.
+
+bibliography: references.bib
+bibliographystyle: chicago-author-date
+
+author:
+  - name: Kazuharu Yanagimoto
+    email: yanagimoto@econ.kobe-u.ac.jp
+    orcid: 0009-0007-1967-8304
+    affiliations:
+    - name: Kobe University
+date-format: long
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+knitr:
+  opts_chunk:
+    fig.align: center
+    fig.retina: 3
+    fig.width: 8
+    fig.height: 3.708
+    out.width: 90%
+    collapse: true
+    dev: svg
