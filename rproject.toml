@@ -1,0 +1,27 @@
+[project]
+# Rename to your project codename (see README: "Project name")
+name = "template-research"
+r_version = "4.6"
+
+repositories = [
+    {alias = "CRAN", url = "https://cloud.r-project.org/"},
+]
+
+dependencies = [
+    "codename",
+    "targets",
+    "tarchetypes",
+    "dplyr",
+    "tidyr",
+    "forcats",
+    "stringr",
+    "readr",
+    "ggplot2",
+    "scales",
+    "here",
+    "fs",
+    "yaml",
+    "tinytable",
+    "quarto",
+    "rmarkdown",
+]

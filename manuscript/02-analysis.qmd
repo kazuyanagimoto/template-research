@@ -1,0 +1,64 @@
+# Analysis {#sec-analysis}
+
+```{r}
+#| label: setup-analysis
+#| include: false
+library(dplyr)
+library(ggplot2)
+library(tinytable)
+options(tinytable_html_mathjax = TRUE)
+
+here::i_am("manuscript/_quarto.yml")
+knitr::opts_knit$set(root.dir = here::here())
+targets::tar_config_set(
+  store = here::here("_targets"),
+  script = here::here("_targets.R")
+)
+
+targets::tar_load(c(
+  penguins_clean,
+  analysis_body_mass,
+  analysis_flipper_fit
+))
+invisible(list2env(targets::tar_read(fn_figure), .GlobalEnv))
+theme_set(theme_proj())
+```
+
+Figures are built inline from pipeline targets with ggplot; they are never registered as targets or written to disk.
+@fig-flipper-fit shows the example pattern, with data and fitted lines distinguished in the legend.
+
+```{r}
+#| label: fig-flipper-fit
+#| fig-cap: "Body mass and flipper length by species"
+#| fig-notes: "Palmer penguins, observations with recorded sex and body mass. Lines are species-specific linear fits."
+ggplot() +
+  geom_point(
+    data = penguins_clean,
+    aes(x = flipper_len, y = body_mass, color = sex, shape = sex),
+    alpha = 0.5,
+    size = 1
+  ) +
+  geom_line(
+    data = analysis_flipper_fit$pred,
+    aes(x = flipper_len, y = body_mass, group = species),
+    color = "grey30"
+  ) +
+  scale_sex(name = NULL) +
+  labs(x = "Flipper length (mm)", y = "Body mass (g)") +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.15, 0.9)
+  )
+```
+
+Tables use `tinytable`, with math in cells written in LaTeX and rewritten for Typst by `theme_mitex()` (@tbl-flipper-fit).
+
+```{r}
+#| label: tbl-flipper-fit
+#| tbl-cap: "Linear fits of body mass on flipper length"
+analysis_flipper_fit$coef |>
+  mutate(across(c(intercept, slope, r2), \(x) sprintf("%.2f", x))) |>
+  setNames(c("Species", "Intercept", "Slope", "$R^2$")) |>
+  tt(notes = notes_text("OLS fits by species on the sample of @fig-flipper-fit.")) |>
+  theme_mitex()
+```

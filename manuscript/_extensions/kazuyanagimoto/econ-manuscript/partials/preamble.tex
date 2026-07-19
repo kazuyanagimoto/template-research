@@ -1,0 +1,113 @@
+% econ-manuscript: classic economics working-paper preamble.
+\usepackage{lmodern}           % Latin Modern: visual match to Typst's New Computer Modern
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{chngcntr}
+\usepackage{etoolbox}
+\usepackage{orcidlink}        % green ORCID iD icon next to author names
+\usepackage{placeins}         % \FloatBarrier (keeps appendix floats below the title)
+
+% Elegant deep-navy link colour (instead of harsh default blue). To change it,
+% edit this hex and the matching `linkcolor`/`citecolor` in _extension.yml.
+\definecolor{ecnlink}{HTML}{1B4F72}
+\AtBeginDocument{\hypersetup{
+  colorlinks=true,
+  linkcolor=ecnlink, citecolor=ecnlink, urlcolor=ecnlink, filecolor=ecnlink,
+}}
+
+% Match Typst: number theorems sequentially (Theorem 1, 2, ...) rather than by
+% section (2.1). Applied at begin-document, after Quarto's \newtheorem defs.
+\makeatletter
+\AtBeginDocument{%
+  \@ifundefined{c@theorem}{}{\counterwithout{theorem}{section}}%
+  \@ifundefined{c@lemma}{}{\counterwithout{lemma}{section}}%
+  \@ifundefined{c@corollary}{}{\counterwithout{corollary}{section}}%
+  \@ifundefined{c@proposition}{}{\counterwithout{proposition}{section}}%
+  \@ifundefined{c@conjecture}{}{\counterwithout{conjecture}{section}}%
+  \@ifundefined{c@definition}{}{\counterwithout{definition}{section}}%
+  \@ifundefined{c@example}{}{\counterwithout{example}{section}}%
+}
+\makeatother
+
+% Tighten display-equation spacing to match Typst. Under linestretch the
+% stretched \baselineskip also enlarges the space around displays, so for each
+% display-math environment we drop back to single spacing and set fixed,
+% Typst-like display skips, then restore the body spacing afterwards.
+\newcommand{\ecnfixdisplay}{%
+  \global\let\ecnsavedstretch\baselinestretch
+  \setstretch{1}%
+  \setlength{\abovedisplayskip}{10pt}%
+  \setlength{\belowdisplayskip}{10pt}%
+  \setlength{\abovedisplayshortskip}{1pt}%
+  \setlength{\belowdisplayshortskip}{6pt}%
+}
+\newcommand{\ecnrestorestretch}{\setstretch{\ecnsavedstretch}}
+% Suppress the first-line indent of the paragraph that follows a display
+% equation: such text continues the sentence and should not be indented (this
+% matches Typst, where post-display paragraphs are unindented by default).
+\makeatletter
+\newcommand{\ecnnoindentnext}{\everypar{{\setbox\z@\lastbox}\everypar{}}}
+\makeatother
+\newcommand{\ecnafterdisplay}{\ecnrestorestretch\ecnnoindentnext}
+\AtBeginDocument{%
+  \BeforeBeginEnvironment{equation}{\ecnfixdisplay}\AfterEndEnvironment{equation}{\ecnafterdisplay}%
+  \BeforeBeginEnvironment{equation*}{\ecnfixdisplay}\AfterEndEnvironment{equation*}{\ecnafterdisplay}%
+  \BeforeBeginEnvironment{align}{\ecnfixdisplay}\AfterEndEnvironment{align}{\ecnafterdisplay}%
+  \BeforeBeginEnvironment{align*}{\ecnfixdisplay}\AfterEndEnvironment{align*}{\ecnafterdisplay}%
+  \BeforeBeginEnvironment{gather}{\ecnfixdisplay}\AfterEndEnvironment{gather}{\ecnafterdisplay}%
+  \BeforeBeginEnvironment{multline}{\ecnfixdisplay}\AfterEndEnvironment{multline}{\ecnafterdisplay}%
+}
+
+% Reference list: no extra space between entries (dense, journal-style), matching
+% Typst. Redefine pandoc's CSLReferences as a tight hanging-indent list (all the
+% list glues zeroed), keeping \bibitem working.
+\makeatletter
+\AtBeginDocument{%
+  \@ifundefined{CSLReferences}{}{%
+    \renewenvironment{CSLReferences}[2]{%
+      \list{}{%
+        \setlength{\leftmargin}{\cslhangindent}%
+        \setlength{\itemindent}{-1\cslhangindent}%
+        \setlength{\labelsep}{0pt}%
+        \setlength{\labelwidth}{0pt}%
+        \setlength{\topsep}{0pt}%
+        \setlength{\partopsep}{0pt}%
+        \setlength{\parsep}{0pt}%
+        \setlength{\itemsep}{0pt}%
+        \setlength{\listparindent}{0pt}%
+      }%
+    }{\endlist}%
+  }%
+}
+\makeatother
+
+% Title block spacing
+\usepackage{titling}
+\setlength{\droptitle}{-3.8em}
+\pretitle{\begin{center}\LARGE}
+\posttitle{\par\end{center}\vskip 0.6em}
+\preauthor{\begin{center}\large}
+\postauthor{\par\end{center}}
+\predate{\vskip 1em\begin{center}\normalsize}
+\postdate{\par\end{center}}
+
+% Abstract: narrower and smaller, classic working-paper look
+\renewenvironment{abstract}{%
+  \vspace{-0.3em}%
+  \begin{center}\bfseries\abstractname\end{center}%
+  \vspace{0.4em}%
+  \begin{quotation}\small\noindent\ignorespaces
+}{%
+  \end{quotation}\vspace{0.5em}%
+}
+
+% Section heading style: bold, left-aligned, generous space above
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\itshape}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{0.95em}{0.32em}
+
+% Paragraph indentation (classic, no inter-paragraph gap)
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}

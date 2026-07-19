@@ -1,0 +1,62 @@
+---
+title: "Example Talk: Template Walkthrough"
+subtitle: Example Seminar
+date: 2026-07-20
+format:
+  touying-typst:
+    include-in-header:
+      text: |
+        #import "@preview/touying-quarto-clean:0.2.0": *
+        #import "@preview/cetz:0.5.2"
+        #import "@preview/mitex:0.2.7": *
+    theme-typst: clean-theme
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(dplyr)
+library(ggplot2)
+library(tinytable)
+targets::tar_config_set(
+  store = here::here("_targets"),
+  script = here::here("_targets.R")
+)
+targets::tar_load(c(penguins_clean, analysis_flipper_fit))
+invisible(list2env(targets::tar_read(fn_figure), .GlobalEnv))
+theme_set(theme_proj(size_base = 18))
+options(
+  tinytable_html_mathjax = TRUE,
+  tinytable_quarto_figure = TRUE,
+  tinytable_tt_theme = theme_mitex
+)
+```
+
+## Slide conventions
+
+- Decks are dated `YYMMDD_venue.qmd` and read pipeline targets, so slides never duplicate analysis code
+- Chunk labels use `plot-*` / `table-*` prefixes to suppress auto-captions
+- **One punchline per slide at most**; everything else stays plain text
+
+## Example figure
+
+```{r}
+#| label: plot-flipper-fit
+ggplot() +
+  geom_point(
+    data = penguins_clean,
+    aes(x = flipper_len, y = body_mass, color = sex, shape = sex),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = analysis_flipper_fit$pred,
+    aes(x = flipper_len, y = body_mass, group = species),
+    color = "grey30"
+  ) +
+  scale_sex(name = NULL) +
+  labs(x = "Flipper length (mm)", y = "Body mass (g)") +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.12, 0.9)
+  )
+```

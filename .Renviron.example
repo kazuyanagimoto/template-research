@@ -1,0 +1,8 @@
+# Copy this file to .Renviron (gitignored) and fill in your own values.
+# Extend PATH if R needs to find external binaries (e.g., Julia via juliaup).
+# PATH="${PATH}:/opt/homebrew/bin"
+
+# API keys used by data-download scripts (leave empty if unused)
+# FRED_API_KEY=""
+# IPUMS_API_KEY=""
+# ESTAT_API_KEY=""

@@ -1,0 +1,15 @@
+---
+title: "Research Notes"
+listing:
+  id: notes
+  contents: "notes/*/index.qmd"
+  type: default
+  sort: title
+  fields: [date, title, subtitle]
+---
+
+This site collects the research notes under `notes/`.
+It is for local viewing while working (`quarto preview`); it is not meant to be deployed.
+
+::: {#notes}
+:::

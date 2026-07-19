@@ -1,0 +1,51 @@
+project:
+  type: book
+
+book:
+  title: "Paper Title"
+  author:
+  - name: Kazuharu Yanagimoto
+    email: yanagimoto@econ.kobe-u.ac.jp
+    orcid: 0009-0007-1967-8304
+    affiliations:
+    - name: Kobe University
+  date: today
+  chapters:
+    - text: Home
+      file: index.qmd
+    - 01-intro.qmd
+    - 02-analysis.qmd
+    - 03-conclusion.qmd
+  appendices:
+    - references.qmd
+
+filters:
+  - quarto-notes-filter
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+    number-depth: 2
+    lightbox: true
+
+execute:
+  echo: false
+  warning: false
+  error: false
+  message: false
+
+crossref:
+  eq-prefix: "Eq."
+
+knitr:
+  opts_chunk:
+    fig.align: center
+    fig.retina: 3
+    fig.width: 6
+    fig.height: 3
+    out.width: 90%
+    collapse: true
+    dev: svg

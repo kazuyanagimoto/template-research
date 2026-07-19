@@ -1,0 +1,28 @@
+$-- econ-manuscript: classic title block (title + thanks footnote, stacked authors).
+$if(title)$
+\title{\bfseries $title$$if(thanks)$\thanks{$thanks$}$endif$}
+$endif$
+$if(subtitle)$
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{\apptocmd{\@title}{\par\vskip 0.45em{\large\mdseries #1\par}}{}{}}
+\makeatother
+\subtitle{$subtitle$}
+$endif$
+\author{%
+$for(by-author)$
+$if(it.name.literal)$
+  \begin{tabular}[t]{c}
+  $it.name.literal$$if(it.orcid)$~\orcidlink{$it.orcid$}$endif$ \\
+$if(it.affiliations)$
+  \normalsize\itshape $for(it.affiliations)$$it.name$$sep$, $endfor$ \\
+$endif$
+$if(it.email)$
+  \normalsize\ttfamily $it.email$
+$endif$
+  \end{tabular}%
+$endif$
+$sep$ \hspace{2em}
+$endfor$
+}
+\date{$date$}

@@ -1,0 +1,84 @@
+---
+title: "Note 01: Example workflow"
+subtitle: "How a note consumes pipeline targets and note-local data"
+author: Kazuharu Yanagimoto
+date: "2026-07-20"
+format:
+  html:
+    toc: true
+    code-fold: true
+    lightbox: true
+bibliography: ../references.bib
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(targets)
+library(dplyr)
+library(ggplot2)
+library(tinytable)
+options(tinytable_html_mathjax = TRUE)
+
+store <- here::here("_targets")
+invisible(list2env(tar_read(fn_figure, store = store), envir = globalenv()))
+theme_set(theme_proj())
+
+penguins_clean <- tar_read(penguins_clean, store = store)
+analysis_body_mass <- tar_read(analysis_body_mass, store = store)
+```
+
+## What this note demonstrates
+
+Each note is a self-contained record of one round of trial and error.
+The typical layout is `notes/NN-name/{index.qmd, code/, output/, data}`:
+
+- `index.qmd` narrates the analysis; prose language is up to you.
+- `code/` holds note-local scripts (heavy computation is run from here and cached to `output/`).
+- `output/` holds generated artifacts and is gitignored.
+- `data` is a **symlink to `notes/data/`**, the shared home of note-stage datasets, so notes never duplicate data files.
+
+Established results are promoted from the note into the main pipeline (`R/tar_*.R`), and the note stays behind as the record.
+
+## Reading pipeline targets
+
+Targets from the main pipeline are read via the store, as in the setup chunk above.
+The sample below uses the built-in example targets; the mean body mass of the `r nrow(penguins_clean)` penguins is `r sprintf("%.2f", mean(penguins_clean$body_mass_kg))` kg.
+
+```{r}
+#| label: fig-body-mass
+#| fig-cap: "Body mass by species and sex"
+analysis_body_mass |>
+  ggplot(aes(x = species, y = mean_kg, color = sex, shape = sex)) +
+  geom_pointrange(
+    aes(ymin = mean_kg - 1.96 * sd_kg / sqrt(n), ymax = mean_kg + 1.96 * sd_kg / sqrt(n)),
+    position = position_dodge(width = 0.3)
+  ) +
+  scale_sex(name = NULL) +
+  labs(x = NULL, y = "Body mass (kg)") +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.85, 0.9)
+  )
+```
+
+```{r}
+#| label: tbl-body-mass
+#| tbl-cap: "Mean body mass by species and sex"
+analysis_body_mass |>
+  mutate(mean_kg = sprintf("%.2f", mean_kg)) |>
+  select(Species = species, Sex = sex, N = n, `Mean (kg)` = mean_kg) |>
+  tt(notes = notes_text("Sample restricted to penguins with observed sex and body mass.")) |>
+  theme_mitex()
+```
+
+## Reading note-local data
+
+Datasets that only exist at the note stage live in `notes/data/` and are reached through the `data` symlink in this folder.
+
+```{r}
+#| label: note-local-data
+#| eval: false
+# The symlink makes note-local paths short and portable across notes:
+raw <- readr::read_csv(here::here("notes", "01-example", "data", "my_extract.csv"))
+```

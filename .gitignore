@@ -1,0 +1,55 @@
+# R
+.Rhistory
+.Rapp.history
+.RData
+.RDataTmp
+.Ruserdata
+*-Ex.R
+/*.tar.gz
+/*.Rcheck/
+.Rproj.user/
+.httr-oauth
+*_cache/
+/cache/
+*.utf8.md
+*.knit.md
+.Renviron
+
+# OS
+.DS_Store
+
+# Data: keep the folder structure, ignore the contents
+data/*
+!data/.gitkeep
+notes/data/*
+!notes/data/.gitkeep
+
+# Local-only instructions and reference PDFs
+.github/
+refs/
+
+# Quarto
+manuscript/_book/
+manuscript/_freeze/
+manuscript/manuscript.pdf
+slides/*.pdf
+_site/
+.quarto/
+/.quarto/
+**/*.quarto_ipynb
+*_files/
+
+# Note-local generated outputs (figures, CSVs, logs)
+notes/**/output/
+
+# targets
+_targets/
+_targets.yaml
+
+# rv
+rv/library/
+
+# Editor
+.vscode/
+
+Rplots.pdf

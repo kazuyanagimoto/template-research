@@ -1,0 +1,58 @@
+---
+title: Paper Title
+subtitle: Optional Subtitle
+author:
+  - name: Kazuharu Yanagimoto
+    email: yanagimoto@econ.kobe-u.ac.jp
+    orcid: 0009-0007-1967-8304
+    affiliations:
+    - name: Kobe University
+    url: https://kazuyanagimoto.com/
+date: last-modified
+date-format: long
+custom-keywords:
+  - name: JEL Codes
+    values: [A10]
+  - name: Keywords
+    values: [Keyword 1, Keyword 2]
+thanks: |
+    Acknowledgements and funding information go here.
+filters:
+  - quarto-notes-filter
+format:
+  econ-manuscript-typst:
+    include-in-header:
+      - text: '#import "@preview/mitex:0.2.7": *'
+execute:
+  echo: false
+  warning: false
+  message: false
+knitr:
+  opts_chunk:
+    fig.align: center
+    fig.retina: 3
+    fig.width: 6
+    fig.height: 3.708
+    fig.pos: 'H'
+    out.width: 90%
+    collapse: true
+    dev: svg
+bibliography: references.bib
+metadata-files:
+  - _abstract.yml
+crossref:
+  eq-prefix: "Eq."
+---
+
+{{< pagebreak >}}
+
+{{< include 01-intro.qmd >}}
+{{< include 02-analysis.qmd >}}
+{{< include 03-conclusion.qmd >}}
+
+{{< pagebreak >}}
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

@@ -1,0 +1,19 @@
+$if(has-frontmatter)$
+\frontmatter
+$endif$
+$if(title)$
+\maketitle
+$if(abstract)$
+\begin{abstract}
+\noindent $abstract$
+$if(keywords)$
+
+\medskip\noindent\textbf{Keywords:} $for(keywords)$$keywords$$sep$, $endfor$
+$endif$
+$for(custom-keywords)$
+
+\noindent\textbf{$it.name$:} $for(it.values)$$it$$sep$, $endfor$
+$endfor$
+\end{abstract}
+$endif$
+$endif$

@@ -1,0 +1,10 @@
+## Abstract {.unnumbered}
+
+```{r}
+#| label: setup-index
+#| output: asis
+here::i_am("manuscript/_quarto.yml")
+knitr::opts_knit$set(root.dir = here::here())
+abs <- yaml::read_yaml(here::here("manuscript", "_abstract.yml"))
+cat(abs$abstract)
+```
