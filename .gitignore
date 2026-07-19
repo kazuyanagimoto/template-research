@@ -23,6 +23,8 @@ data/*
 !data/.gitkeep
 notes/data/*
 !notes/data/.gitkeep
+slides/data/*
+!slides/data/.gitkeep
 
 # Local-only instructions and reference PDFs
 .github/
@@ -32,15 +34,16 @@ refs/
 manuscript/_book/
 manuscript/_freeze/
 manuscript/manuscript.pdf
-slides/*.pdf
+slides/**/*.pdf
 _site/
 .quarto/
 /.quarto/
 **/*.quarto_ipynb
 *_files/
 
-# Note-local generated outputs (figures, CSVs, logs)
+# Note- and slide-local generated outputs (figures, CSVs, logs)
 notes/**/output/
+slides/**/output/
 
 # targets
 _targets/

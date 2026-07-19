@@ -16,7 +16,11 @@ tar_figure <- tar_plan(
     pal_sex = pal_sex,
     lty_sex = lty_sex,
     shp_sex = shp_sex,
-    scale_sex = scale_sex
+    scale_sex = scale_sex,
+    pal_species = pal_species,
+    lty_species = lty_species,
+    shp_species = shp_species,
+    scale_species = scale_species
   )
 )
 
@@ -98,6 +102,22 @@ scale_sex <- function(...) {
     ggplot2::scale_color_manual(values = pal_sex, ...),
     ggplot2::scale_linetype_manual(values = lty_sex, ...),
     ggplot2::scale_shape_manual(values = shp_sex, ...)
+  )
+}
+
+pal_species <- c(
+  "Adelie" = color_accent,
+  "Chinstrap" = color_accent2,
+  "Gentoo" = color_accent3
+)
+lty_species <- c("Adelie" = "solid", "Chinstrap" = "dashed", "Gentoo" = "dotted")
+shp_species <- c("Adelie" = 16, "Chinstrap" = 17, "Gentoo" = 15)
+
+scale_species <- function(...) {
+  list(
+    ggplot2::scale_color_manual(values = pal_species, ...),
+    ggplot2::scale_linetype_manual(values = lty_species, ...),
+    ggplot2::scale_shape_manual(values = shp_species, ...)
   )
 }
 

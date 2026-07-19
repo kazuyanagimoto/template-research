@@ -1,0 +1,42 @@
+---
+title: "Example Talk: Template Walkthrough"
+subtitle: Example Seminar
+date: 2026-07-20
+format:
+  touying-typst:
+    include-in-header:
+      text: |
+        #import "@preview/touying-quarto-clean:0.2.0": *
+        #import "@preview/cetz:0.5.2"
+        #import "@preview/mitex:0.2.7": *
+    theme-typst: clean-theme
+---
+
+```{r}
+#| label: setup
+#| include: false
+# Self-contained: source this deck's frozen setup, never tar_load() the pipeline.
+source(here::here("slides", "260720_example", "code", "setup.R"))
+theme_set(theme_slide())
+```
+
+## Slide conventions
+
+- Each deck is its own folder `slides/YYMMDD_venue/`, like a note: `index.qmd`, `code/`, `output/`, and a `data -> ../data` symlink to the shared `slides/data/`
+- A deck is a **frozen snapshot**: it never reads the live pipeline with `tar_load`, so it compiles the same way years later regardless of how `R/` evolves
+- Chunk labels use `plot-*` / `table-*` prefixes to suppress auto-captions
+
+## Example figure
+
+```{r}
+#| label: plot-flipper
+penguins_snapshot |>
+  ggplot(aes(x = flipper_len, y = body_mass, color = species, shape = species)) +
+  geom_point(alpha = 0.6) +
+  scale_species(name = NULL) +
+  labs(x = "Flipper length (mm)", y = "Body mass (g)") +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.85, 0.2)
+  )
+```

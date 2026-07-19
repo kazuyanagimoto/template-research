@@ -34,16 +34,15 @@ Figures are built inline from pipeline targets with ggplot; they are never regis
 ggplot() +
   geom_point(
     data = penguins_clean,
-    aes(x = flipper_len, y = body_mass, color = sex, shape = sex),
+    aes(x = flipper_len, y = body_mass, color = species, shape = species),
     alpha = 0.5,
     size = 1
   ) +
   geom_line(
     data = analysis_flipper_fit$pred,
-    aes(x = flipper_len, y = body_mass, group = species),
-    color = "grey30"
+    aes(x = flipper_len, y = body_mass, color = species)
   ) +
-  scale_sex(name = NULL) +
+  scale_species(name = NULL) +
   labs(x = "Flipper length (mm)", y = "Body mass (g)") +
   theme(
     legend.position = "inside",

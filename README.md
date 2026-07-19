@@ -21,7 +21,9 @@ An opinionated template for empirical research projects built on:
 ├── notes/              # Trial-and-error notes (Quarto website, local viewing)
 │   ├── data/           # Shared home of note-stage datasets (gitignored)
 │   └── 01-example/     # One folder per note: index.qmd, code/, output/, data -> ../data
-├── slides/             # Dated decks (YYMMDD_venue.qmd), Touying + Typst
+├── slides/             # One folder per deck (like notes); frozen snapshots
+│   ├── data/           # Shared home of slide-stage datasets (gitignored)
+│   └── 260720_example/ # index.qmd, code/, output/, data -> ../data
 ├── manuscript/         # Quarto book + single-file Typst manuscript
 ├── rproject.toml       # rv manifest (R version, repositories, dependencies)
 └── references.bib      # Zotero-managed; symlinked into notes/, slides/, manuscript/
@@ -37,7 +39,9 @@ An opinionated template for empirical research projects built on:
    Each `notes/NN-name/` folder is one round of trial and error, with its own `code/` and gitignored `output/`.
    Note-stage datasets live once in `notes/data/` and each note reaches them through a `data -> ../data` symlink, so nothing is duplicated.
    When a note produces a solid result, promote the code into `R/tar_*.R`; the note stays behind as the record.
-3. **Slides and the manuscript only consume targets.**
+3. **The manuscript consumes targets; slides are frozen snapshots.**
+   The manuscript reads the live pipeline with `tar_load`, so it always reflects the current data.
+   A deck under `slides/` is a folder like a note and never uses `tar_load`: it carries the theme, data, and results it needs (in `code/`, `output/`, or via the `data -> ../data` symlink), so a talk given a year ago still compiles as it did then.
    Every number in prose is computed inline (`` `r ...` ``), never typed as a literal.
 
 ## Getting started
@@ -65,7 +69,7 @@ An opinionated template for empirical research projects built on:
    ```
 
    The example pipeline runs on a built-in dataset, so this works before you add any data.
-5. Preview the notes site with `quarto preview`, render a deck with `quarto render slides/260720_example.qmd`.
+5. Preview the notes site with `quarto preview`, render a deck with `quarto render slides/260720_example/index.qmd`.
 6. Copy `.Renviron.example` to `.Renviron` and fill in API keys as needed.
 
 ## Replication (for released projects)
