@@ -8,6 +8,7 @@
 
 library(dplyr)
 library(ggplot2)
+library(tinytable)
 
 # ---- theme (frozen copy) ----------------------------------------------------
 
@@ -51,3 +52,44 @@ scale_species <- function(...) {
 
 penguins_snapshot <- datasets::penguins |>
   tidyr::drop_na(body_mass, species, flipper_len)
+
+# ---- tables with math (mitex demo) ------------------------------------------
+# theme_mitex rewrites `$...$` LaTeX in table cells into `#mi(`...`)`, which the
+# mitex Typst package (imported in the deck header) renders. Registered as the
+# default tinytable theme so every tt() in this deck picks it up.
+
+theme_mitex <- function(x, ...) {
+  fn <- function(table) {
+    if (isTRUE(table@output == "typst")) {
+      table@table_string <- gsub(
+        "\\$(.*?)\\$",
+        "#mi(`\\1`)",
+        table@table_string
+      )
+      table@table_string <- paste0(
+        "#align(center)[\n",
+        table@table_string,
+        "\n]"
+      )
+    }
+    table
+  }
+  x <- style_tt(x, finalize = fn)
+  theme_tt(x, theme = "default")
+}
+
+options(
+  tinytable_html_mathjax = TRUE,
+  tinytable_tt_theme = theme_mitex
+)
+
+# Per-species OLS of body mass on flipper length, for the math table.
+species_fit <- penguins_snapshot |>
+  tidyr::nest(.by = species) |>
+  mutate(
+    fit = lapply(data, \(d) lm(body_mass ~ flipper_len, data = d)),
+    alpha = vapply(fit, \(m) coef(m)[[1]], numeric(1)),
+    beta = vapply(fit, \(m) coef(m)[[2]], numeric(1)),
+    r2 = vapply(fit, \(m) summary(m)$r.squared, numeric(1))
+  ) |>
+  select(species, alpha, beta, r2)
