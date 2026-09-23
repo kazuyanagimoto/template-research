@@ -33,8 +33,12 @@ manuscript_targets <- function(file = here::here("manuscript", "_setup.R")) {
       found <<- c(found, all.vars(x[[2]]))
     }
     for (i in seq_along(x)) {
+      # An empty argument (as in x[i, ]) is the empty symbol. Test it in place:
+      # binding it to a variable and then evaluating that variable errors.
+      if (identical(x[[i]], quote(expr = ))) {
+        next
+      }
       el <- x[[i]]
-      # empty arguments (as in x[i, ]) are the empty symbol, not a call
       if (is.call(el)) walk(el)
     }
     invisible(NULL)
