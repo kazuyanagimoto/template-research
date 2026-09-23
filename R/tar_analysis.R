@@ -25,19 +25,20 @@ fct_body_mass <- function(data) {
 }
 
 # Linear fit of body mass on flipper length, by species.
-# Returns a list: $coef for tables, $pred for plot-ready fitted lines.
+# Returns a list: $models for modelsummary() tables, $pred for fitted lines.
+# Model objects are kept in the target itself, so the manuscript passes them
+# straight to modelsummary() instead of re-assembling a coefficient table.
 fct_flipper_fit <- function(data) {
   fits <- data |>
     tidyr::nest(.by = species) |>
-    mutate(fit = lapply(data, \(d) lm(body_mass ~ flipper_len, data = d)))
-
-  coef <- fits |>
     mutate(
-      intercept = vapply(fit, \(m) coef(m)[1], numeric(1)),
-      slope = vapply(fit, \(m) coef(m)[2], numeric(1)),
-      r2 = vapply(fit, \(m) summary(m)$r.squared, numeric(1))
-    ) |>
-    select(species, intercept, slope, r2)
+      fit = lapply(
+        data,
+        \(d) fixest::feols(body_mass ~ flipper_len, data = d, vcov = "hetero")
+      )
+    )
+
+  models <- setNames(fits$fit, as.character(fits$species))
 
   pred <- fits |>
     mutate(
@@ -61,5 +62,5 @@ fct_flipper_fit <- function(data) {
     select(species, pred) |>
     tidyr::unnest(pred)
 
-  list(coef = coef, pred = pred)
+  list(models = models, pred = pred)
 }

@@ -3,17 +3,8 @@
 ```{r}
 #| label: setup-intro
 #| include: false
-# Pin here() to the project root, not manuscript/, so that working-dir
-# changes from editor renders or quarto book builds resolve identically.
 here::i_am("manuscript/_quarto.yml")
-knitr::opts_knit$set(root.dir = here::here())
-targets::tar_config_set(
-  store = here::here("_targets"),
-  script = here::here("_targets.R")
-)
-targets::tar_load(c(
-  penguins_clean
-))
+source(here::here("manuscript", "_setup.R"))
 ```
 
 Write the introduction here.

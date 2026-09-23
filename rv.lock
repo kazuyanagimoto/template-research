@@ -4,6 +4,13 @@ version = 2
 r_version = "4.6"
 
 [[packages]]
+name = "Formula"
+version = "1.2-6"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = []
+
+[[packages]]
 name = "Matrix"
 version = "1.7-5"
 source = { builtin = true }
@@ -64,6 +71,16 @@ dependencies = [
 ]
 
 [[packages]]
+name = "bayestestR"
+version = "0.19.0"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "insight", requirement = "(>= 1.5.3)" },
+    { name = "datawizard", requirement = "(>= 1.3.1)" },
+]
+
+[[packages]]
 name = "bit"
 version = "4.6.0"
 source = { repository = "https://cloud.r-project.org/" }
@@ -120,6 +137,15 @@ dependencies = [
 ]
 
 [[packages]]
+name = "checkmate"
+version = "2.3.4"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "backports", requirement = "(>= 1.1.0)" },
+]
+
+[[packages]]
 name = "cli"
 version = "3.6.6"
 source = { repository = "https://cloud.r-project.org/" }
@@ -169,6 +195,15 @@ force_source = false
 dependencies = []
 
 [[packages]]
+name = "datawizard"
+version = "1.4.0"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "insight", requirement = "(>= 1.5.3)" },
+]
+
+[[packages]]
 name = "digest"
 version = "0.6.39"
 source = { repository = "https://cloud.r-project.org/" }
@@ -195,6 +230,16 @@ dependencies = [
 ]
 
 [[packages]]
+name = "dreamerr"
+version = "1.5.0"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    "Formula",
+    { name = "stringmagic", requirement = "(>= 1.2.0)" },
+]
+
+[[packages]]
 name = "evaluate"
 version = "1.0.5"
 source = { repository = "https://cloud.r-project.org/" }
@@ -214,6 +259,20 @@ version = "1.2.0"
 source = { repository = "https://cloud.r-project.org/" }
 force_source = false
 dependencies = []
+
+[[packages]]
+name = "fixest"
+version = "0.14.2"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    "numDeriv",
+    "nlme",
+    "sandwich",
+    { name = "Rcpp", requirement = "(>= 1.0.5)" },
+    { name = "dreamerr", requirement = "(>= 1.4.0)" },
+    { name = "stringmagic", requirement = "(>= 1.2.0)" },
+]
 
 [[packages]]
 name = "fontawesome"
@@ -349,6 +408,13 @@ dependencies = [
 ]
 
 [[packages]]
+name = "insight"
+version = "1.5.4"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = []
+
+[[packages]]
 name = "isoband"
 version = "0.3.0"
 source = { repository = "https://cloud.r-project.org/" }
@@ -446,11 +512,66 @@ force_source = false
 dependencies = []
 
 [[packages]]
+name = "modelsummary"
+version = "2.6.0"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "checkmate", requirement = "(>= 2.3.1)" },
+    { name = "data.table", requirement = "(>= 1.17.8)" },
+    "generics",
+    "glue",
+    { name = "insight", requirement = "(>= 1.4.0)" },
+    { name = "parameters", requirement = "(>= 0.28.0)" },
+    { name = "performance", requirement = "(>= 0.15.0)" },
+    { name = "tables", requirement = "(>= 0.9.31)" },
+    { name = "tinytable", requirement = "(>= 0.16.0)" },
+]
+
+[[packages]]
+name = "nlme"
+version = "3.1-169"
+source = { builtin = true }
+force_source = false
+dependencies = [
+    "lattice",
+]
+
+[[packages]]
+name = "numDeriv"
+version = "2016.8-1.1"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = []
+
+[[packages]]
 name = "otel"
 version = "0.2.0"
 source = { repository = "https://cloud.r-project.org/" }
 force_source = false
 dependencies = []
+
+[[packages]]
+name = "parameters"
+version = "0.29.3"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "bayestestR", requirement = "(>= 0.18.1)" },
+    { name = "datawizard", requirement = "(>= 1.3.1)" },
+    { name = "insight", requirement = "(>= 1.5.3)" },
+]
+
+[[packages]]
+name = "performance"
+version = "0.18.2"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "bayestestR", requirement = "(>= 0.18.1)" },
+    { name = "insight", requirement = "(>= 1.5.3)" },
+    { name = "datawizard", requirement = "(>= 1.3.1)" },
+]
 
 [[packages]]
 name = "pillar"
@@ -610,6 +731,15 @@ force_source = false
 dependencies = []
 
 [[packages]]
+name = "sandwich"
+version = "3.1-3"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    "zoo",
+]
+
+[[packages]]
 name = "sass"
 version = "0.4.10"
 source = { repository = "https://cloud.r-project.org/" }
@@ -654,6 +784,15 @@ force_source = false
 dependencies = []
 
 [[packages]]
+name = "stringmagic"
+version = "1.3.0"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "Rcpp", requirement = "(>= 1.0.5)" },
+]
+
+[[packages]]
 name = "stringr"
 version = "1.6.0"
 source = { repository = "https://cloud.r-project.org/" }
@@ -666,6 +805,16 @@ dependencies = [
     { name = "rlang", requirement = "(>= 1.0.0)" },
     { name = "stringi", requirement = "(>= 1.5.3)" },
     { name = "vctrs", requirement = "(>= 0.4.0)" },
+]
+
+[[packages]]
+name = "tables"
+version = "0.9.35"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    "knitr",
+    "htmltools",
 ]
 
 [[packages]]
@@ -851,3 +1000,12 @@ version = "2.3.12"
 source = { repository = "https://cloud.r-project.org/" }
 force_source = false
 dependencies = []
+
+[[packages]]
+name = "zoo"
+version = "1.9-0"
+source = { repository = "https://cloud.r-project.org/" }
+force_source = false
+dependencies = [
+    { name = "lattice", requirement = "(>= 0.20-27)" },
+]

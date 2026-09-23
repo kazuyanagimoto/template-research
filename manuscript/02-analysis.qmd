@@ -3,25 +3,8 @@
 ```{r}
 #| label: setup-analysis
 #| include: false
-library(dplyr)
-library(ggplot2)
-library(tinytable)
-options(tinytable_html_mathjax = TRUE)
-
 here::i_am("manuscript/_quarto.yml")
-knitr::opts_knit$set(root.dir = here::here())
-targets::tar_config_set(
-  store = here::here("_targets"),
-  script = here::here("_targets.R")
-)
-
-targets::tar_load(c(
-  penguins_clean,
-  analysis_body_mass,
-  analysis_flipper_fit
-))
-invisible(list2env(targets::tar_read(fn_figure), .GlobalEnv))
-theme_set(theme_proj())
+source(here::here("manuscript", "_setup.R"))
 ```
 
 Figures are built inline from pipeline targets with ggplot; they are never registered as targets or written to disk.
@@ -50,14 +33,19 @@ ggplot() +
   )
 ```
 
-Tables use `tinytable`, with math in cells written in LaTeX and rewritten for Typst by `theme_mitex()` (@tbl-flipper-fit).
+Regression tables are built by `modelsummary()` from the model objects the
+pipeline stores, not from a hand-assembled coefficient table (@tbl-flipper-fit).
 
 ```{r}
 #| label: tbl-flipper-fit
-#| tbl-cap: "Linear fits of body mass on flipper length"
-analysis_flipper_fit$coef |>
-  mutate(across(c(intercept, slope, r2), \(x) sprintf("%.2f", x))) |>
-  setNames(c("Species", "Intercept", "Slope", "$R^2$")) |>
-  tt(notes = notes_text("OLS fits by species on the sample of @fig-flipper-fit.")) |>
+#| tbl-cap: "Body mass on flipper length, by species"
+modelsummary(
+  analysis_flipper_fit$models,
+  output = "tinytable",
+  coef_map = c(flipper_len = "Flipper length (mm)", "(Intercept)" = "Constant"),
+  gof_map = c("nobs", "r.squared"),
+  stars = STARS,
+  notes = notes_text("OLS by species on the estimation sample. Heteroskedasticity-robust standard errors in parentheses.")
+) |>
   theme_mitex()
 ```

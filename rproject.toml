@@ -24,4 +24,6 @@ dependencies = [
     "tinytable",
     "quarto",
     "rmarkdown",
+    "fixest",
+    "modelsummary",
 ]
