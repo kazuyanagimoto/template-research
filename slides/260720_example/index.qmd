@@ -27,7 +27,7 @@ theme_set(theme_slide())
 ## Slide conventions
 
 - Each deck is its own folder `slides/YYMMDD_venue/`, like a note: `index.qmd`, `code/`, `output/`, and a `data -> ../data` symlink to the shared `slides/data/`
-- A deck is a **frozen snapshot**: it never reads the live pipeline with `tar_load`, so it compiles the same way years later regardless of how `R/` evolves
+- A deck is a **frozen snapshot**, on the same terms as a note: it never reads the live pipeline with `tar_load`, so it compiles the same way years later regardless of how `R/` evolves
 - Chunk labels use `plot-*` / `table-*` prefixes to suppress auto-captions
 
 ## Example figure
@@ -91,4 +91,4 @@ species_fit |>
 ]
 ```
 
-The pipeline turns tracked `data/` into a `_targets` store that notes, slides, and the manuscript read.
+The pipeline turns tracked `data/` into a `_targets` store that the manuscript reads.

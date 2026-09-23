@@ -1,9 +1,10 @@
 # Figure-helper sub-plan: a single target `fn_figure` bundling the ggplot
 # theme, accent colors, palettes, and table helpers.
 #
-# Quarto documents load everything at once with
-#   list2env(targets::tar_read(fn_figure, store = store), envir = globalenv())
-# so notes, slides, and the manuscript share one visual identity.
+# The manuscript loads everything at once with
+#   list2env(targets::tar_read(fn_figure), envir = globalenv())
+# and is the only consumer: notes and slides are frozen snapshots that keep
+# their own copy of whatever they need in their code/setup.R.
 
 tar_figure <- tar_plan(
   fn_figure = list(

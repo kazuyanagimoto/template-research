@@ -1,6 +1,6 @@
 ---
 title: "Note 01: Example workflow"
-subtitle: "How a note consumes pipeline targets and note-local data"
+subtitle: "How a note freezes the theme, data, and results it needs"
 author: Kazuharu Yanagimoto
 date: "2026-07-20"
 format:
@@ -14,18 +14,9 @@ bibliography: ../references.bib
 ```{r}
 #| label: setup
 #| include: false
-library(targets)
-library(dplyr)
-library(ggplot2)
-library(tinytable)
-options(tinytable_html_mathjax = TRUE)
-
-store <- here::here("_targets")
-invisible(list2env(tar_read(fn_figure, store = store), envir = globalenv()))
-theme_set(theme_proj())
-
-penguins_clean <- tar_read(penguins_clean, store = store)
-analysis_body_mass <- tar_read(analysis_body_mass, store = store)
+# Self-contained: source this note's frozen setup, never tar_read() the pipeline.
+source(here::here("notes", "01-example", "code", "setup.R"))
+theme_set(theme_note())
 ```
 
 ## What this note demonstrates
@@ -33,22 +24,33 @@ analysis_body_mass <- tar_read(analysis_body_mass, store = store)
 Each note is a self-contained record of one round of trial and error.
 The typical layout is `notes/NN-name/{index.qmd, code/, output/, data}`:
 
-- `index.qmd` narrates the analysis; prose language is up to you.
-- `code/` holds note-local scripts (heavy computation is run from here and cached to `output/`).
-- `output/` holds generated artifacts and is gitignored.
+- `index.qmd` narrates the analysis and only reads CSVs from `output/`; prose language is up to you.
+- `code/` holds the note's scripts: numbered computation scripts plus `setup.R`.
+- `output/` holds the CSVs those scripts write. It is gitignored, because it is fully regenerable from the committed `code/`.
 - `data` is a **symlink to `notes/data/`**, the shared home of note-stage datasets, so notes never duplicate data files.
 
 Established results are promoted from the note into the main pipeline (`R/tar_*.R`), and the note stays behind as the record.
 
-## Reading pipeline targets
+## A note is a frozen snapshot
 
-Targets from the main pipeline are read via the store, as in the setup chunk above.
-The sample below uses the built-in example targets; the mean body mass of the `r nrow(penguins_clean)` penguins is `r sprintf("%.2f", mean(penguins_clean$body_mass_kg))` kg.
+A note never reads the live pipeline: there is no `tar_read()` or `tar_load()` anywhere in `notes/`.
+Reading the pipeline from a note would quietly rewrite the record, because a note re-rendered next year would report whatever the pipeline says then, not what it said on the day the note was written.
+Only `manuscript/` tracks the live pipeline, via `tar_load()` in `manuscript/_setup.R`.
+
+The freeze has two halves, and the split matters:
+
+- **Computation is frozen.** `code/01_body_mass.R` is the only place raw data is touched. It writes `output/*.csv`, and the qmd reads nothing else. Dropping `tar_read()` is not by itself enough: a note whose setup reads `data/` is still on live data and its findings still drift.
+- **The theme is frozen too.** `code/setup.R` carries `theme_note()`, the palettes, the `scale_*()` helpers, and the table helpers, so the note keeps the look it was written with.
+
+So `code/` is the record. `output/` is a cache, and `setup.R` regenerates it on a fresh clone.
+The setup chunk above does nothing but `source()` that file and set the theme.
+
+The mean body mass of the `r nrow(penguins_snapshot)` penguins in this note's snapshot is `r sprintf("%.2f", mean(penguins_snapshot$body_mass_kg))` kg.
 
 ```{r}
 #| label: fig-body-mass
 #| fig-cap: "Body mass by species and sex"
-analysis_body_mass |>
+body_mass_summary |>
   ggplot(aes(x = species, y = mean_kg, color = sex, shape = sex)) +
   geom_pointrange(
     aes(ymin = mean_kg - 1.96 * sd_kg / sqrt(n), ymax = mean_kg + 1.96 * sd_kg / sqrt(n)),
@@ -65,20 +67,27 @@ analysis_body_mass |>
 ```{r}
 #| label: tbl-body-mass
 #| tbl-cap: "Mean body mass by species and sex"
-analysis_body_mass |>
+body_mass_summary |>
   mutate(mean_kg = sprintf("%.2f", mean_kg)) |>
   select(Species = species, Sex = sex, N = n, `Mean (kg)` = mean_kg) |>
-  tt(notes = notes_text("Sample restricted to penguins with observed sex and body mass.")) |>
-  theme_mitex()
+  tt(notes = notes_text("Sample restricted to penguins with observed sex and body mass."))
 ```
 
 ## Reading note-local data
 
 Datasets that only exist at the note stage live in `notes/data/` and are reached through the `data` symlink in this folder.
+Paths are resolved from the project root with `here::here()`, because the notes website renders every note with the repo root as the working directory.
+
+Raw data is read in `code/`, never in the qmd:
 
 ```{r}
 #| label: note-local-data
 #| eval: false
-# The symlink makes note-local paths short and portable across notes:
+# in code/02_something.R
 raw <- readr::read_csv(here::here("notes", "01-example", "data", "my_extract.csv"))
+# ... compute ...
+readr::write_csv(result, file.path(O, "something.csv"))
+
+# then, in the qmd
+something <- rd("something.csv")
 ```
