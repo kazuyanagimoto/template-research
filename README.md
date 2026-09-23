@@ -15,18 +15,19 @@ An opinionated template for empirical research projects built on:
 │   ├── tar_data.R      # Data sub-plan: raw file targets + cleaning helpers
 │   ├── tar_analysis.R  # Analysis sub-plan: plot-ready data targets
 │   ├── tar_figure.R    # fn_figure: shared ggplot theme, palettes, table helpers
-│   ├── tar_manuscript.R# Renders the manuscript when sources or data change
+│   ├── tar_manuscript.R# Renders the manuscript; deps derived from _setup.R
 │   └── utils.R         # here_rel() and other small helpers
 ├── data/               # Raw data for the main pipeline (gitignored, .gitkeep)
-├── notes/              # Trial-and-error notes (Quarto website, local viewing)
+├── notes/              # Trial-and-error notes (Quarto website, local viewing), frozen snapshots
 │   ├── data/           # Shared home of note-stage datasets (gitignored)
-│   └── 01-example/     # One folder per note: index.qmd, code/, output/, data -> ../data
+│   └── 01-example/     # index.qmd, code/{01_*.R,setup.R}, output/, data -> ../data
 ├── slides/             # Own Quarto project; one folder per deck, frozen snapshots
 │   ├── _quarto.yml     # Slides project config (shared across decks)
 │   ├── _extensions/    # Touying/Typst theme, shared by all decks
 │   ├── data/           # Shared home of slide-stage datasets (gitignored)
 │   └── 260720_example/ # index.qmd, code/, output/, data -> ../data
 ├── manuscript/         # Quarto book + single-file Typst manuscript
+│   └── _setup.R        # The only place the manuscript loads targets
 ├── rproject.toml       # rv manifest (R version, repositories, dependencies)
 └── references.bib      # Zotero-managed; symlinked into notes/, slides/, manuscript/
 ```
@@ -35,15 +36,18 @@ An opinionated template for empirical research projects built on:
 
 1. **Everything flows through the pipeline.**
    `targets` produces *data objects only* (cleaned data, estimates, plot-ready summaries).
-   Figures are built inline in Quarto documents with `tar_read()` + ggplot and are never registered as targets or written to disk.
+   Figures are built inline in Quarto documents with ggplot and are never registered as targets or written to disk.
    Processed data are not stored as files; they live in the targets store (`_targets/`).
 2. **Notes are the lab bench.**
-   Each `notes/NN-name/` folder is one round of trial and error, with its own `code/` and gitignored `output/`.
+   Each `notes/NN-name/` folder is one round of trial and error.
+   Numbered scripts in `code/` read raw data and write `output/*.csv`; `index.qmd` reads those CSVs and computes nothing.
    Note-stage datasets live once in `notes/data/` and each note reaches them through a `data -> ../data` symlink, so nothing is duplicated.
    When a note produces a solid result, promote the code into `R/tar_*.R`; the note stays behind as the record.
-3. **The manuscript consumes targets; slides are frozen snapshots.**
-   The manuscript reads the live pipeline with `tar_load`, so it always reflects the current data.
-   `slides/` is its own Quarto project (like `manuscript/`), and each deck is a folder like a note that never uses `tar_load`: it carries the theme, data, and results it needs (in `code/`, `output/`, or via the `data -> ../data` symlink), so a talk given a year ago still compiles as it did then.
+3. **Only the manuscript consumes targets; notes and slides are frozen snapshots.**
+   The manuscript reads the live pipeline through `manuscript/_setup.R`, so it always reflects the current data, and `R/tar_manuscript.R` derives its dependency list from that file so the PDF can never go quietly stale.
+   A note and a deck never read the pipeline: the computation is pinned in `code/` and the theme is a frozen copy in `code/setup.R`, so the record of a past round of work, or a talk given a year ago, still renders as it did then.
+   `output/` is gitignored because it is regenerable from the committed `code/`; the scripts are the record, not the CSVs.
+   `slides/` is its own Quarto project (like `manuscript/`); `notes/` is rendered by the root website project.
    Every number in prose is computed inline (`` `r ...` ``), never typed as a literal.
 
 ## Getting started
